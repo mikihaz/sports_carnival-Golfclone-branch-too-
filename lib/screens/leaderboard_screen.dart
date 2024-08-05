@@ -87,15 +87,28 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     final columnWidth = screenWidth / (columnCount * 1.2);
 
     return Scaffold(
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back, color: Colors.white),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      //   title: const Text('Leaderboard', style: TextStyle(color: Colors.white)),
+      //   backgroundColor: Colors.blueAccent,
+      // ),
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: Text(
+          'Leaderboard',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        title: const Text('Leaderboard', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

@@ -1,94 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:rpgl/bases/api/bannerImage.dart';
+import 'package:rpgl/bases/themes.dart';
+import 'package:rpgl/screens/notification_screen.dart';
 import 'package:rpgl/widgets/BottomNavigationBar.dart';
 import 'package:rpgl/widgets/StaticButtonGrid.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? bannerImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBannerImage();
+  }
+
+  Future<void> _fetchBannerImage() async {
+    try {
+      BannerImageAPI response = await BannerImageAPI.leaderboardlist();
+      setState(() {
+        bannerImageUrl = response.bannerImage;
+      });
+    } catch (e) {
+      print("Error fetching banner image: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:
-            const Size.fromHeight(150.0), // Increased height of AppBar
+        preferredSize: const Size.fromHeight(200.0),
         child: AppBar(
-          actions: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.power_settings_new),
-                onPressed: () {
-                  // Handle power button press
-                },
-              ),
-            ),
-          ],
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           flexibleSpace: Stack(
             children: [
-              const Positioned.fill(
-                child: Image(
-                  image: AssetImage(
-                    'assets/images/topbanner.jpg',
-                  ), // Ensure this image exists in your assets
-                  fit: BoxFit.cover,
+              Positioned.fill(
+                child: bannerImageUrl != null
+                    ? Image.network(
+                        bannerImageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          'assets/images/topbanner.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/topbanner.jpg',
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
               ),
-              Positioned.fill(
-                child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    return Stack(
-                      children: [
-                        ClipPath(
-                          clipper: InvertedSemiCircleClipper(),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(
-                                      0.8), // Increase opacity for a darker shadow
-                                  blurRadius:
-                                      50, // Increase blurRadius for a thicker shadow
-                                  offset: const Offset(0,
-                                      -20), // Negative offset to move shadow upwards
-                                  spreadRadius:
-                                      50, // Increase spreadRadius for a more prominent shadow
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: constraints.maxWidth *
-                              0.1, // Adjust the position of the man
-                          top: constraints.maxHeight *
-                              0.5, // Adjust the position of the man
-                          child: Image.asset(
-                            'assets/images/man.gif', // Replace with the path to the image of the man
-                            height: constraints.maxHeight *
-                                0.5, // Adjust the size of the man
-                          ),
-                        ),
-                        // Positioned(
-                        //   right: constraints.maxWidth *
-                        //       0.1, // Adjust the position of the golf ball
-                        //   top: constraints.maxHeight *
-                        //       0.5, // Adjust the position of the golf ball
-                        //   child: Image.asset(
-                        //     'assets/images/golf-ball.gif', // Replace with the path to the image of the golf ball
-                        //     height: constraints.maxHeight *
-                        //         0.3, // Adjust the size of the golf ball
-                        //   ),
-                        // ),
-                      ],
-                    );
-                  },
+              Positioned(
+                top: 50,
+                right: 10,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.notifications),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationScreen()),
+                        );
+                        // Handle notifications
+                      },
+                      color: Colors.white,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.power_settings_new),
+                      onPressed: () {
+                        // Handle power button press
+                      },
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          backgroundColor:
-              Colors.transparent, // Make the AppBar background transparent
         ),
       ),
       body: SingleChildScrollView(
@@ -100,10 +105,9 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Container(
                       height: 40,
-                      color: Colors.blueAccent,
+                      color: AppThemes.getBackground(),
                     ),
                     Container(
-                      // color: Colors.white,
                       height: 35,
                     ),
                   ],
@@ -120,7 +124,7 @@ class HomeScreen extends StatelessWidget {
                       height: 70,
                       image: AssetImage(
                         'assets/images/Ballantines-Logo.png',
-                      ), // Ensure this image exists in your assets
+                      ),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -129,14 +133,13 @@ class HomeScreen extends StatelessWidget {
             ),
             Container(
               height: 40,
-              color: Colors.blueAccent,
+              color: AppThemes.getBackground(),
               child: const Center(
                 child: Text(
                   'Royal Premier Golf League 2023-24',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                    // fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -160,60 +163,40 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 child: Center(
-                    child: Column(
-                  children: [
-                    Container(
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 80.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
-                          ),
-                          child: Image(
-                            height: 40,
-                            width: double.infinity,
-                            image: AssetImage(
-                              'assets/images/grantthonton.jpg',
+                  child: Column(
+                    children: [
+                      Container(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 80.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
                             ),
-                            fit: BoxFit.fill,
+                            child: Image(
+                              height: 40,
+                              width: double.infinity,
+                              image: AssetImage(
+                                'assets/images/grantthonton.jpg',
+                              ),
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      child: Text('No Ongoing Matches'),
-                    ),
-                  ],
-                )),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Text('No Ongoing Matches'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
-      bottomNavigationBar:
-          CustomBottomNavigationBar(), // Custom bottom navigation bar
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
-}
-
-class InvertedSemiCircleClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.moveTo(0, 100); // Move to the start point, adjusted to be higher
-    path.quadraticBezierTo(
-      size.width / 2, size.height, // Control point, adjusted to be higher
-      size.width, size.height - 100, // End point, adjusted to be higher
-    );
-
-    path.lineTo(size.width, size.height); // Draw the right side
-    path.lineTo(0, size.height); // Draw the bottom side
-    path.close(); // Close the path
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

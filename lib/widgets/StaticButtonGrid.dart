@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/about_screen.dart';
 import 'package:rpgl/screens/committee_screen.dart';
 import 'package:rpgl/screens/copd_screen.dart';
+import 'package:rpgl/screens/ownersandteams_screen.dart';
 
 class StaticButtonGrid extends StatelessWidget {
   final List<ButtonConfig> buttons = [
@@ -24,7 +26,7 @@ class StaticButtonGrid extends StatelessWidget {
     ButtonConfig(
         imagePath: 'assets/images/owners_team.png',
         text: 'Owners & Teams',
-        screen: CommitteeScreen()),
+        screen: OwnersAndTeamsScreen()),
     ButtonConfig(
         imagePath: 'assets/images/statistic.png',
         text: 'Statistics',
@@ -88,6 +90,7 @@ class StaticButtonGrid extends StatelessWidget {
                       child: Image.asset(
                         button.imagePath,
                         fit: BoxFit.contain,
+                        color: AppThemes.getBackground(), // Black icon color
                       ),
                     ),
                     const SizedBox(height: 8),

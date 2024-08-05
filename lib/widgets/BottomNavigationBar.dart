@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/leaderboard_screen.dart';
 import 'package:rpgl/screens/schedule_screen.dart';
 
@@ -10,7 +11,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         Container(
           height: 60.0, // Reduced height for the BottomNavigationBar
           decoration: BoxDecoration(
-            color: Colors.blueAccent,
+            color: AppThemes.getBackground(),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.3),
@@ -64,8 +65,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
               FloatingActionButton(
                 onPressed: () {},
                 backgroundColor: Colors.white,
-                child: const Icon(Icons.sports_golf_rounded,
-                    color: Colors.blueAccent),
+                child: Icon(Icons.sports_golf_rounded,
+                    color: AppThemes.getBackground()),
                 elevation: 8.0,
               ),
               const SizedBox(

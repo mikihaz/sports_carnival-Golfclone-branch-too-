@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/committee.dart';
+import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/bases/webservice.dart'; // Import the necessary files
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,14 +12,17 @@ class CommitteeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: Text(
+          'Committee',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        title: const Text('Committee', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: FutureBuilder<Committee>(
         future: CommitteeDetails.committeeList(),
@@ -77,10 +81,10 @@ class CommitteeSection extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
+              color: AppThemes.getBackground(),
             ),
           ),
         ),
@@ -101,7 +105,7 @@ class CommitteeSection extends StatelessWidget {
               return CommitteeMember(
                 name: member.name ?? 'No Name',
                 designation: member.role ?? 'No Role',
-                image: member.role ?? '',
+                image: member.image ?? '',
                 phoneNumber: member.phone ?? '',
                 email: member.email ?? '',
               );
@@ -141,7 +145,7 @@ class CommitteeMember extends StatelessWidget {
       },
       child: Card(
         color: Colors.white,
-        shadowColor: Colors.blueAccent,
+        shadowColor: AppThemes.getBackground(),
         elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -186,14 +190,14 @@ class CommitteeMember extends StatelessWidget {
                       _makePhoneCall(phoneNumber);
                     },
                     icon: const Icon(Icons.call),
-                    color: Colors.blueAccent,
+                    color: AppThemes.getBackground(),
                   ),
                   IconButton(
                     onPressed: () {
                       _sendEmail(email);
                     },
                     icon: const Icon(Icons.mail),
-                    color: Colors.blueAccent,
+                    color: AppThemes.getBackground(),
                   ),
                 ],
               ),
