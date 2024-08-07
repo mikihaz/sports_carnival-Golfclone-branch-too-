@@ -66,6 +66,7 @@ class ScheduleAPI {
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
+    print(responseString);
     return ScheduleAPI.fromJson(jsonDecode(responseString));
   }
 }

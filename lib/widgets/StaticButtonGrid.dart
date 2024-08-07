@@ -4,6 +4,9 @@ import 'package:rpgl/screens/about_screen.dart';
 import 'package:rpgl/screens/committee_screen.dart';
 import 'package:rpgl/screens/copd_screen.dart';
 import 'package:rpgl/screens/ownersandteams_screen.dart';
+import 'package:rpgl/screens/refereAndMarshal_screen.dart';
+import 'package:rpgl/screens/reserveplayers_screen.dart';
+import 'package:rpgl/screens/sponsor_screen.dart';
 
 class StaticButtonGrid extends StatelessWidget {
   final List<ButtonConfig> buttons = [
@@ -22,7 +25,7 @@ class StaticButtonGrid extends StatelessWidget {
     ButtonConfig(
         imagePath: 'assets/images/sponsors.png',
         text: 'Sponsors',
-        screen: CommitteeScreen()),
+        screen: SponsorScreen()),
     ButtonConfig(
         imagePath: 'assets/images/owners_team.png',
         text: 'Owners & Teams',
@@ -31,18 +34,18 @@ class StaticButtonGrid extends StatelessWidget {
         imagePath: 'assets/images/statistic.png',
         text: 'Statistics',
         screen: CommitteeScreen()),
-    ButtonConfig(
-        imagePath: 'assets/images/notification.png',
-        text: 'Notifications',
-        screen: CommitteeScreen()),
+    // ButtonConfig(
+    //     imagePath: 'assets/images/notification.png',
+    //     text: 'Notifications',
+    //     screen: CommitteeScreen()),
     ButtonConfig(
         imagePath: 'assets/images/refree.png',
         text: 'Referee & Marshall',
-        screen: CommitteeScreen()),
-    ButtonConfig(
-        imagePath: 'assets/images/res.png',
-        text: 'Reserve Players',
-        screen: CommitteeScreen()),
+        screen: RefereeAndMarshalScreen()),
+    // ButtonConfig(
+    //     imagePath: 'assets/images/res.png',
+    //     text: 'Reserve Players',
+    //     screen: ReservePlayersScreen()),
     ButtonConfig(
         imagePath: 'assets/images/pair.png',
         text: 'Version 2.04',

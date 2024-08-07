@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rpgl/bases/api/schedule.dart';
 import 'package:rpgl/bases/api/show_all_participants.dart';
 import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/participant_screen.dart';
@@ -105,7 +106,9 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
                     teamImage: '${widget.imageUrl}',
                   ),
 
-                  const ScheduleTab()
+                  ScheduleTab(
+                    teamId: '${widget.teamId}',
+                  )
                 ],
               ),
             ),
@@ -117,42 +120,90 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
 }
 
 class ScheduleTab extends StatefulWidget {
-  const ScheduleTab({Key? key}) : super(key: key);
+  final String teamId; // Add teamId as a parameter
+
+  const ScheduleTab({Key? key, required this.teamId}) : super(key: key);
 
   @override
   State<ScheduleTab> createState() => _ScheduleTabState();
 }
 
 class _ScheduleTabState extends State<ScheduleTab> {
-  final List<Map<String, String>> matches = [
-    {
-      'matchNo': '1',
-      'matchName': 'Match Name 1',
-      'logoA': 'assets/images/team_a_logo.png',
-      'teamA': 'Team A',
-      'logoB': 'assets/images/team_b_logo.png',
-      'teamB': 'Team B',
-      'date': 'August 5, 2024',
-      'time': '5:00 PM'
-    },
-    // Add more matches as needed
-  ];
+  List<Group> matches = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMatches();
+  }
+
+  Future<void> fetchMatches() async {
+    try {
+      // Fetch data from API
+      ScheduleAPI scheduleAPI = await ScheduleAPI.matchlist();
+
+      List<Group> allMatches = [];
+
+      // Check if scheduleAndResultsDetails is available and fetch matches
+      if (scheduleAPI.scheduleAndResultsDetails != null) {
+        // Extract matches from the groups map
+        scheduleAPI.scheduleAndResultsDetails!.groups?.forEach((key, value) {
+          allMatches.addAll(value); // Add all matches from each group
+        });
+      } else {
+        print('No ScheduleAndResultsDetails data found.');
+      }
+
+      // Debugging: Print the collected matches
+      print(
+          'All matches: ${allMatches.map((match) => match.toJson()).toList()}');
+
+      // Filter matches by team ID using widget.teamId
+      matches = allMatches
+          .where((match) =>
+              match.team1Id == widget.teamId || match.team2Id == widget.teamId)
+          .toList();
+
+      // Debugging: Print the filtered matches
+      print(
+          'Filtered matches: ${matches.map((match) => match.toJson()).toList()}');
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle errors here
+      print('Error fetching matches: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    if (matches.isEmpty) {
+      return Center(child: Text('No matches found for the selected team.'));
+    }
+
     return ListView.builder(
       itemCount: matches.length,
       itemBuilder: (context, index) {
         final match = matches[index];
         return MatchCard(
-          matchNo: match['matchNo']!,
-          // matchName: match['matchName']!,
-          logoA: match['logoA']!,
-          teamA: match['teamA']!,
-          logoB: match['logoB']!,
-          teamB: match['teamB']!,
-          date: match['date']!,
-          time: match['time']!,
+          matchNo: match.id!,
+          // matchName: match.groupName!, // Uncomment if matchName is needed
+          logoA: match.team1ImageUrl!,
+          teamA: match.team1!,
+          logoB: match.team2ImageUrl!,
+          teamB: match.team2!,
+          date: match.date!,
+          time: match.time!,
         );
       },
     );

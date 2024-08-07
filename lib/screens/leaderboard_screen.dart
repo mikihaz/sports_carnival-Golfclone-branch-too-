@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/leaderboard.dart';
+import 'package:rpgl/bases/themes.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'dart:async';
 
@@ -95,7 +96,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       //     },
       //   ),
       //   title: const Text('Leaderboard', style: TextStyle(color: Colors.white)),
-      //   backgroundColor: Colors.blueAccent,
+      //   backgroundColor: AppThemes.getBackground(),
       // ),
       appBar: AppBar(
         title: Text(
@@ -130,7 +131,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: selectedGroup == groupName
-                                ? Colors.blueAccent
+                                ? AppThemes.getBackground()
                                 : Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
@@ -143,7 +144,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             style: TextStyle(
                               color: selectedGroup == groupName
                                   ? Colors.white
-                                  : Colors.blueAccent,
+                                  : AppThemes.getBackground(),
                             ),
                           ),
                         ),

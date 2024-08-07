@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/leaderboard_screen.dart';
+import 'package:rpgl/screens/ownersRoom_screen.dart';
+import 'package:rpgl/screens/result_screen.dart';
 import 'package:rpgl/screens/schedule_screen.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -46,13 +48,19 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 context,
                 Icons.star,
                 'Result',
-                () {},
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ResultScreen()),
+                ),
               ),
               buildNavItem(
                 context,
                 Icons.person,
                 "Owner's Room",
-                () {},
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => OwnersRoomScreen()),
+                ),
               ),
             ],
           ),

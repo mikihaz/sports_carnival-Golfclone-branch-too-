@@ -11,4 +11,8 @@ class Webservice {
       "show_team_and_participants_details.php";
   static const String show_schedule_and_results_details_new =
       "show_schedule_and_results_details_new.php";
+  static const String show_notification_details =
+      "show_notification_details.php";
+  static const String show_sponsors_details = "show_sponsors_details.php";
+  static const String show_marshal_details = "show_marshal_details.php";
 }
