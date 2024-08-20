@@ -15,4 +15,8 @@ class Webservice {
       "show_notification_details.php";
   static const String show_sponsors_details = "show_sponsors_details.php";
   static const String show_marshal_details = "show_marshal_details.php";
+  static const String ws_main_login_v2 = "ws_main_login_v2.php";
+  static const String sql_show_my_team_members_for_owner =
+      "sql_show_my_team_members_for_owner.php";
+  static const String ws_live_score_status = "ws_live_score_status.php";
 }

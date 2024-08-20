@@ -5,6 +5,9 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'dart:async';
 
 class LeaderboardScreen extends StatefulWidget {
+  final String sponsorImageUrl; // This can be a file path or URL
+
+  const LeaderboardScreen({super.key, required this.sponsorImageUrl});
   @override
   _LeaderboardScreenState createState() => _LeaderboardScreenState();
 }
@@ -112,7 +115,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Colors.black,
+            ))
           : Column(
               children: [
                 Padding(
@@ -270,8 +276,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       height: 200,
                       width: double.infinity,
                       color: Colors.white,
-                      child: Image.asset(
-                        'assets/images/grantthonton.jpg',
+                      child: Image.network(
+                        widget.sponsorImageUrl,
                         fit: BoxFit.cover,
                       ),
                     ),

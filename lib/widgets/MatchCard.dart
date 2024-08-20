@@ -145,10 +145,18 @@ class MatchCard extends StatelessWidget {
             child: CircleAvatar(
               radius: 25,
               backgroundColor: Colors.grey.shade200,
-              backgroundImage: AssetImage("${logo}"),
+              // image: AssetImage("${logo}"),
+              backgroundImage: logo.isNotEmpty ? NetworkImage(logo) : null,
               onBackgroundImageError: (_, __) => _buildPlaceholder(teamName),
               child: logo.isEmpty ? _buildPlaceholder(teamName) : null,
             ),
+            // CircleAvatar(
+            //       radius: 20,
+            //       backgroundImage: widget.image.isNotEmpty
+            //           ? NetworkImage(widget.image)
+            //           : null,
+            //       child: widget.image.isEmpty ? const Icon(Icons.person) : null,
+            //     ),
           ),
           const SizedBox(height: 8),
           Text(

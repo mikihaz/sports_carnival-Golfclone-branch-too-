@@ -40,7 +40,7 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3, // Updated to match the number of tabs
       child: Scaffold(
         body: CustomScrollView(
           controller: _scrollController,
@@ -54,7 +54,7 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
                   fit: StackFit.expand,
                   children: [
                     Image.network(
-                      '${widget.imageUrl}',
+                      widget.imageUrl,
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.high,
                     ),
@@ -92,6 +92,7 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
                     tabs: [
                       Tab(text: 'Members'),
                       Tab(text: 'Schedule'),
+                      Tab(text: 'Results'),
                     ],
                   ),
                 ),
@@ -102,19 +103,117 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
                 children: [
                   // Members Tab
                   MembersTab(
-                    teamId: '${widget.teamId}',
-                    teamImage: '${widget.imageUrl}',
+                    teamId: widget.teamId,
+                    teamImage: widget.imageUrl,
                   ),
-
+                  // Schedule Tab
                   ScheduleTab(
-                    teamId: '${widget.teamId}',
-                  )
+                    teamId: widget.teamId,
+                  ),
+                  // Results Tab
+                  ResultTab(
+                    teamId: widget.teamId,
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ResultTab extends StatefulWidget {
+  final String teamId; // Add teamId as a parameter
+
+  const ResultTab({Key? key, required this.teamId}) : super(key: key);
+
+  @override
+  State<ResultTab> createState() => _ResultTabState();
+}
+
+class _ResultTabState extends State<ResultTab> {
+  List<Group> matches = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMatches();
+  }
+
+  Future<void> fetchMatches() async {
+    try {
+      // Fetch data from API
+      ScheduleAPI scheduleAPI = await ScheduleAPI.matchlist();
+
+      List<Group> allMatches = [];
+
+      // Check if scheduleAndResultsDetails is available and fetch matches
+      if (scheduleAPI.scheduleAndResultsDetails != null) {
+        // Extract matches from the groups map
+        scheduleAPI.scheduleAndResultsDetails!.groups?.forEach((key, value) {
+          allMatches.addAll(value); // Add all matches from each group
+        });
+      } else {
+        print('No ScheduleAndResultsDetails data found.');
+      }
+
+      // Debugging: Print the collected matches
+      print(
+          'All matches: ${allMatches.map((match) => match.toJson()).toList()}');
+
+      // Filter matches by team ID using widget.teamId
+      matches = allMatches
+          .where((match) =>
+              match.team1Id == widget.teamId || match.team2Id == widget.teamId)
+          .toList();
+
+      // Debugging: Print the filtered matches
+      print(
+          'Filtered matches: ${matches.map((match) => match.toJson()).toList()}');
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle errors here
+      print('Error fetching matches: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator(color: Colors.black));
+    }
+
+    if (matches.isEmpty) {
+      return Center(child: Text('No matches found for the selected team.'));
+    }
+
+    return ListView.builder(
+      itemCount: matches.length,
+      itemBuilder: (context, index) {
+        final match = matches[index];
+        return MatchCard(
+          matchNo: match.id!,
+          // matchName: match.groupName!, // Uncomment if matchName is needed
+          logoA: match.team1ImageUrl!,
+          teamA: match.team1!,
+          logoB: match.team2ImageUrl!,
+          teamB: match.team2!,
+          date: match.date!,
+          time: match.time!,
+          showResult: true,
+          result:
+              match.results ?? 'No result available', // Provide a default value
+        );
+      },
     );
   }
 }
@@ -184,7 +283,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: Colors.black));
     }
 
     if (matches.isEmpty) {
@@ -236,7 +335,10 @@ class _MembersTabState extends State<MembersTab> {
         future: futureParticipants,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.black,
+            ));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData ||

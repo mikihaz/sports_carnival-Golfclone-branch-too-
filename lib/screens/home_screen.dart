@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/bannerImage.dart';
+import 'package:rpgl/bases/api/homescreen.dart'; // Import the API file
 import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/notification_screen.dart';
 import 'package:rpgl/widgets/BottomNavigationBar.dart';
@@ -12,11 +13,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? bannerImageUrl;
+  String? leagueName; // Variable to store data from the API
+  String? homescreensponsor; // Variable to store data from the API
+  String? leaderboardsponsor; // Variable to store data from the API
 
   @override
   void initState() {
     super.initState();
     _fetchBannerImage();
+    _fetchHomeScreenData(); // Fetch data from the homescreenlist API
   }
 
   Future<void> _fetchBannerImage() async {
@@ -28,6 +33,19 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       print("Error fetching banner image: $e");
     }
+  }
+
+  Future<void> _fetchHomeScreenData() async {
+    // try {
+    HomescreenAPI response = await HomescreenAPI.homescreenlist();
+    setState(() {
+      leagueName = response.usernameExistStatus;
+      homescreensponsor = response.homeScreenSideImage;
+      leaderboardsponsor = response.leaderboardImage;
+    });
+    // } catch (e) {
+    //   print("Error fetching home screen data: $e");
+    // }
   }
 
   @override
@@ -78,7 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(
                               builder: (context) => NotificationScreen()),
                         );
-                        // Handle notifications
                       },
                       color: Colors.white,
                     ),
@@ -120,12 +137,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Image(
-                      height: 70,
-                      image: AssetImage(
-                        'assets/images/Ballantines-Logo.png',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          8.0), // Adjust the radius as needed
+                      child: Image.network(
+                        homescreensponsor ?? '',
+                        height: 70,
+                        width: 130,
+                        fit: BoxFit.fill,
                       ),
-                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
@@ -134,9 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               height: 40,
               color: AppThemes.getBackground(),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Royal Premier Golf League 2023-24',
+                  leagueName ?? '', // Use leagueName variable here
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -166,20 +186,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Container(
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 80.0),
                           child: ClipRRect(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15),
                               bottomRight: Radius.circular(15),
                             ),
-                            child: Image(
+                            child: Image.network(
+                              leaderboardsponsor ?? '',
                               height: 40,
                               width: double.infinity,
-                              image: AssetImage(
-                                'assets/images/grantthonton.jpg',
-                              ),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -196,7 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        sponsorImageUrl: leaderboardsponsor ?? '',
+      ),
     );
   }
 }

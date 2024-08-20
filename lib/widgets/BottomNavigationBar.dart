@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/leaderboard_screen.dart';
+import 'package:rpgl/screens/login_screen.dart';
 import 'package:rpgl/screens/ownersRoom_screen.dart';
 import 'package:rpgl/screens/result_screen.dart';
 import 'package:rpgl/screens/schedule_screen.dart';
 
-class CustomBottomNavigationBar extends StatelessWidget {
+class CustomBottomNavigationBar extends StatefulWidget {
+  final String sponsorImageUrl;
+
+  const CustomBottomNavigationBar({super.key, required this.sponsorImageUrl});
+
+  @override
+  _CustomBottomNavigationBarState createState() =>
+      _CustomBottomNavigationBarState();
+}
+
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          height: 60.0, // Reduced height for the BottomNavigationBar
+          height: 60.0,
           decoration: BoxDecoration(
             color: AppThemes.getBackground(),
             boxShadow: [
@@ -31,7 +42,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 'Leaderboard',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LeaderboardScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => LeaderboardScreen(
+                      sponsorImageUrl: widget.sponsorImageUrl,
+                    ),
+                  ),
                 ),
               ),
               buildNavItem(
@@ -40,17 +55,20 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 'Schedule',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ScheduleScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => ScheduleScreen(),
+                  ),
                 ),
               ),
-              const SizedBox(width: 40), // Space for the middle item
               buildNavItem(
                 context,
                 Icons.star,
                 'Result',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ResultScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => ResultScreen(),
+                  ),
                 ),
               ),
               buildNavItem(
@@ -59,39 +77,48 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 "Owner's Room",
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OwnersRoomScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
                 ),
               ),
-            ],
+            ].map((item) {
+              return Expanded(child: item);
+            }).toList(),
           ),
         ),
-        Center(
-          heightFactor: 0.5,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FloatingActionButton(
-                onPressed: () {},
-                backgroundColor: Colors.white,
-                child: Icon(Icons.sports_golf_rounded,
-                    color: AppThemes.getBackground()),
-                elevation: 8.0,
-              ),
-              const SizedBox(
-                  height: 2), // Reduced spacing between icon and text
-              const Text(
-                "Scoreboard",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
+        // Center(
+        //   heightFactor: 0.5,
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       FloatingActionButton(
+        //         onPressed: () {},
+        //         backgroundColor: Colors.white,
+        //         child: Icon(
+        //           Icons.sports_golf_rounded,
+        //           color: AppThemes.getBackground(),
+        //         ),
+        //         elevation: 8.0,
+        //       ),
+        //       const SizedBox(height: 2),
+        //       const Text(
+        //         "Scoreboard",
+        //         style: TextStyle(color: Colors.white, fontSize: 12),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
 
-  Widget buildNavItem(BuildContext context, IconData icon, String label,
-      VoidCallback onPressed) {
+  Widget buildNavItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    VoidCallback onPressed,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

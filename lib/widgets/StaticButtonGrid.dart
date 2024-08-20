@@ -4,9 +4,12 @@ import 'package:rpgl/screens/about_screen.dart';
 import 'package:rpgl/screens/committee_screen.dart';
 import 'package:rpgl/screens/copd_screen.dart';
 import 'package:rpgl/screens/ownersandteams_screen.dart';
+import 'package:rpgl/screens/play_along_screen.dart';
 import 'package:rpgl/screens/refereAndMarshal_screen.dart';
 import 'package:rpgl/screens/reserveplayers_screen.dart';
 import 'package:rpgl/screens/sponsor_screen.dart';
+import 'package:rpgl/screens/statistics_screen.dart';
+import 'package:rpgl/screens/statistics_webview_screen.dart';
 
 class StaticButtonGrid extends StatelessWidget {
   final List<ButtonConfig> buttons = [
@@ -33,7 +36,7 @@ class StaticButtonGrid extends StatelessWidget {
     ButtonConfig(
         imagePath: 'assets/images/statistic.png',
         text: 'Statistics',
-        screen: CommitteeScreen()),
+        screen: StatisticsWebViewScreen()),
     // ButtonConfig(
     //     imagePath: 'assets/images/notification.png',
     //     text: 'Notifications',
@@ -46,10 +49,14 @@ class StaticButtonGrid extends StatelessWidget {
     //     imagePath: 'assets/images/res.png',
     //     text: 'Reserve Players',
     //     screen: ReservePlayersScreen()),
+    // ButtonConfig(
+    //     imagePath: 'assets/images/playstore.png',
+    //     text: 'Version 2.04',
+    //     screen: CommitteeScreen()),
     ButtonConfig(
-        imagePath: 'assets/images/pair.png',
-        text: 'Version 2.04',
-        screen: CommitteeScreen()),
+        imagePath: 'assets/images/people.png',
+        text: 'Play Along',
+        screen: PlayAlongScreen()),
   ];
 
   @override
