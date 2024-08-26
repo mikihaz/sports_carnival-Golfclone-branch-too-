@@ -7,7 +7,7 @@ class CopdScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'COPD',
           style: TextStyle(
             color: Colors.black,
@@ -17,11 +17,11 @@ class CopdScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: CustomWebView(
+      body: const CustomWebView(
         initialUrl:
-            'https://birdie.forcempower.com/copd/copd_new.php?leagueid=OPL25',
+            'https://birdie.forcempower.com/copd/copd_new.php?leagueid=CSC2024',
       ),
     );
   }

@@ -415,10 +415,9 @@ class _MembersTabState extends State<MembersTab> {
                       return PlayerRows(
                         name: participant.participantName ?? 'Unknown',
                         image: participant.participantImage ?? '',
-                        sports: participant.sports == null ||
-                                participant.sports!.isEmpty
-                            ? ['No sports']
-                            : participant.sports!.split(','),
+                        sports: participant.sports?.isNotEmpty == true
+                            ? participant.sports!
+                            : ['No sports'],
                         score: participant.totalGames ?? '0',
                         minutesPlayed: participant.achievements ?? '0',
                         teamImage: widget.teamImage,

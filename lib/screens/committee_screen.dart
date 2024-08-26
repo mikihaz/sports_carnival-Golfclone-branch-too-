@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/committee.dart';
 import 'package:rpgl/bases/themes.dart';
-import 'package:rpgl/bases/webservice.dart'; // Import the necessary files
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -104,7 +102,7 @@ class CommitteeSection extends StatelessWidget {
               var member = members[index];
               return CommitteeMember(
                 name: member.name ?? 'No Name',
-                designation: member.role ?? 'No Role',
+                designation: member.description ?? 'No Role',
                 image: member.image ?? '',
                 phoneNumber: member.phone ?? '',
                 email: member.email ?? '',
@@ -194,11 +192,16 @@ class CommitteeMember extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      _sendEmail(email);
+                      _sendWhatsApp('${phoneNumber}', 'Hello $name');
                     },
-                    icon: const Icon(Icons.mail),
-                    color: AppThemes.getBackground(),
-                  ),
+                    icon: SvgPicture.asset(
+                      'assets/images/whatsapp.svg',
+                      color: Colors.green,
+                      semanticsLabel: 'WhatsApp Icon',
+                      height: 24, // Set your desired height
+                      width: 24, // Set your desired width
+                    ),
+                  )
                 ],
               ),
             ],
@@ -217,10 +220,27 @@ void _makePhoneCall(String phoneNumber) async {
   await launchUrl(launchUri);
 }
 
-void _sendEmail(String email) async {
-  final Uri emailUri =
-      Uri(scheme: 'mailto', path: email, queryParameters: {'subject': 'Hello'});
-  await launchUrl(emailUri);
+// void _sendEmail(String email) async {
+//   final Uri emailUri =
+//       Uri(scheme: 'mailto', path: email, queryParameters: {'subject': 'Hello'});
+//   await launchUrl(emailUri);
+// }
+
+void _sendWhatsApp(String phoneNumber, String message) async {
+  final Uri whatsappUri = Uri(
+    scheme: 'https',
+    host: 'wa.me',
+    path: phoneNumber,
+    queryParameters: {
+      'text': message,
+    },
+  );
+
+  if (await canLaunchUrl(whatsappUri)) {
+    await launchUrl(whatsappUri);
+  } else {
+    print('Could not launch $whatsappUri');
+  }
 }
 
 class FullScreenImage extends StatelessWidget {

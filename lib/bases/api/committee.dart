@@ -98,9 +98,16 @@ class TournamentCommittee {
   String? email;
   String? role;
   String? image;
+  String? description;
 
   TournamentCommittee(
-      {this.id, this.name, this.phone, this.email, this.role, this.image});
+      {this.id,
+      this.name,
+      this.phone,
+      this.email,
+      this.role,
+      this.image,
+      this.description});
 
   TournamentCommittee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -109,6 +116,7 @@ class TournamentCommittee {
     email = json['email'];
     role = json['role'];
     image = json['image'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -119,6 +127,7 @@ class TournamentCommittee {
     data['email'] = email;
     data['role'] = role;
     data['image'] = image;
+    data['description'] = description;
     return data;
   }
 }
@@ -130,9 +139,16 @@ class ClubCommittee {
   String? email;
   String? role;
   String? image;
+  String? description;
 
   ClubCommittee(
-      {this.id, this.name, this.phone, this.email, this.role, this.image});
+      {this.id,
+      this.name,
+      this.phone,
+      this.email,
+      this.role,
+      this.image,
+      this.description});
 
   ClubCommittee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -141,6 +157,7 @@ class ClubCommittee {
     email = json['email'];
     role = json['role'];
     image = json['image'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -151,6 +168,7 @@ class ClubCommittee {
     data['email'] = email;
     data['role'] = role;
     data['image'] = image;
+    data['description'] = description;
     return data;
   }
 }
@@ -162,9 +180,16 @@ class SportsCommittee {
   String? email;
   String? role;
   String? image;
+  String? description;
 
   SportsCommittee(
-      {this.id, this.name, this.phone, this.email, this.role, this.image});
+      {this.id,
+      this.name,
+      this.phone,
+      this.email,
+      this.role,
+      this.image,
+      this.description});
 
   SportsCommittee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -173,6 +198,7 @@ class SportsCommittee {
     email = json['email'];
     role = json['role'];
     image = json['image'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -183,6 +209,7 @@ class SportsCommittee {
     data['email'] = email;
     data['role'] = role;
     data['image'] = image;
+    data['description'] = description;
     return data;
   }
 }

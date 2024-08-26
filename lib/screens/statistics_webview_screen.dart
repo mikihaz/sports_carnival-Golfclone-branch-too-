@@ -11,9 +11,7 @@ class StatisticsWebViewScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Statistics'),
       ),
-      body: CustomWebView(
-        initialUrl: url,
-      ),
+      body: CustomWebView(initialUrl: url),
     );
   }
 }

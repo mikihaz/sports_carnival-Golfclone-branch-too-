@@ -55,7 +55,7 @@ class AllParticipantDetails {
   String? handicap;
   String? participantImage;
   String? achievements;
-  String? sports;
+  List<String>? sports;
   String? totalGames;
   String? groupName;
 
@@ -79,7 +79,7 @@ class AllParticipantDetails {
     handicap = json['handicap'];
     participantImage = json['participant_image'];
     achievements = json['achievements'];
-    sports = json['sports'];
+    sports = json['sports'].cast<String>();
     totalGames = json['total_games'];
     groupName = json['group_name'];
   }
