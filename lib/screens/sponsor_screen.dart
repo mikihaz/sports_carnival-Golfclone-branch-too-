@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/sponsor.dart';
 import 'package:rpgl/bases/themes.dart';
+import 'package:rpgl/widgets/CustomWebView.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SponsorScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _SponsorScreenState extends State<SponsorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Sponsors & Partners',
           style: TextStyle(
             color: Colors.black,
@@ -31,7 +32,7 @@ class _SponsorScreenState extends State<SponsorScreen> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,13 +40,13 @@ class _SponsorScreenState extends State<SponsorScreen> {
           future: _sponsorsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error fetching sponsors'));
+              return const Center(child: Text('Error fetching sponsors'));
             } else if (!snapshot.hasData ||
                 snapshot.data!.sponsorsDetails == null ||
                 snapshot.data!.sponsorsDetails!.isEmpty) {
-              return Center(child: Text('No sponsors available'));
+              return const Center(child: Text('No sponsors available'));
             } else {
               List<SponsorsDetails> sponsors = snapshot.data!.sponsorsDetails!;
               return GridView.builder(
@@ -82,11 +83,26 @@ class SponsorCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: InkWell(
-        onTap: () async {
-          if (await canLaunch(sponsor.website ?? '')) {
-            await launch(sponsor.website!);
+        onTap: () {
+          if (sponsor.website != null && sponsor.website!.isNotEmpty) {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (BuildContext context) {
+                return Container(
+                  height:
+                      MediaQuery.of(context).size.height * 0.9, // 90% height
+                  child: CustomWebView(
+                    initialUrl: sponsor.website!,
+                    // title: sponsor.sponsor ?? 'Website',
+                  ),
+                );
+              },
+            );
           } else {
-            throw 'Could not launch ${sponsor.website}';
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Website not available')),
+            );
           }
         },
         child: Padding(

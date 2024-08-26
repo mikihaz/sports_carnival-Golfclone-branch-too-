@@ -20,4 +20,5 @@ class Webservice {
       "sql_show_my_team_members_for_owner.php";
   static const String ws_live_score_status = "ws_live_score_status.php";
   static const String about_api = "about_api.php";
+  static const String copd_api = "copd_api.php";
 }

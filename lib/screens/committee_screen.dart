@@ -33,30 +33,18 @@ class CommitteeScreen extends StatelessWidget {
             return Center(child: Text('No data available'));
           }
 
-          var tournamentCommittee =
-              snapshot.data?.committeeDetails?.tournamentCommittee;
-          var clubCommittee = snapshot.data?.committeeDetails?.clubCommittee;
-          var sportsCommittee =
-              snapshot.data?.committeeDetails?.sportsCommittee;
+          var committees = snapshot.data?.committeeDetails?.committees ?? {};
 
           return ListView(
-            children: [
-              if (tournamentCommittee != null && tournamentCommittee.isNotEmpty)
-                CommitteeSection(
-                  title: 'Tournament Committee',
-                  members: tournamentCommittee,
-                ),
-              if (clubCommittee != null && clubCommittee.isNotEmpty)
-                CommitteeSection(
-                  title: 'Club Committee',
-                  members: clubCommittee,
-                ),
-              if (sportsCommittee != null && sportsCommittee.isNotEmpty)
-                CommitteeSection(
-                  title: 'Sports Committee',
-                  members: sportsCommittee,
-                ),
-            ],
+            children: committees.entries.map((entry) {
+              var committeeName = entry.key;
+              var members = entry.value;
+
+              return CommitteeSection(
+                title: committeeName,
+                members: members,
+              );
+            }).toList(),
           );
         },
       ),
@@ -106,6 +94,7 @@ class CommitteeSection extends StatelessWidget {
                 image: member.image ?? '',
                 phoneNumber: member.phone ?? '',
                 email: member.email ?? '',
+                wpNumber: member.whatsapp ?? '',
               );
             },
           ),
@@ -120,6 +109,7 @@ class CommitteeMember extends StatelessWidget {
   final String designation;
   final String image;
   final String phoneNumber;
+  final String wpNumber;
   final String email;
 
   CommitteeMember({
@@ -127,6 +117,7 @@ class CommitteeMember extends StatelessWidget {
     required this.designation,
     required this.image,
     required this.phoneNumber,
+    required this.wpNumber,
     required this.email,
   });
 
@@ -192,7 +183,8 @@ class CommitteeMember extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      _sendWhatsApp('${phoneNumber}', 'Hello $name');
+                      _sendWhatsApp('${wpNumber}', 'Hello $name');
+                      // _sendWhatsApp('8420474756', 'Hello $name');
                     },
                     icon: SvgPicture.asset(
                       'assets/images/whatsapp.svg',
@@ -227,19 +219,17 @@ void _makePhoneCall(String phoneNumber) async {
 // }
 
 void _sendWhatsApp(String phoneNumber, String message) async {
-  final Uri whatsappUri = Uri(
-    scheme: 'https',
-    host: 'wa.me',
-    path: phoneNumber,
-    queryParameters: {
-      'text': message,
-    },
-  );
+  // Ensure phone number is in international format without any "+" or spaces
+  phoneNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
 
-  if (await canLaunchUrl(whatsappUri)) {
-    await launchUrl(whatsappUri);
+  // WhatsApp URL with encoded message
+  String url =
+      "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
+
+  if (await canLaunch(url)) {
+    await launch(url);
   } else {
-    print('Could not launch $whatsappUri');
+    throw 'Could not launch WhatsApp';
   }
 }
 

@@ -79,7 +79,7 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
                 },
               ),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
+                preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: ColoredBox(
                   color: Colors.white,
                   child: TabBar(
@@ -88,11 +88,11 @@ class _TeamAndParticipantScreenState extends State<TeamAndParticipantScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: AppThemes.getBackground()),
-                    unselectedLabelStyle: TextStyle(fontSize: 16),
+                    unselectedLabelStyle: const TextStyle(fontSize: 16),
                     tabs: [
-                      Tab(text: 'Members'),
-                      Tab(text: 'Schedule'),
-                      Tab(text: 'Results'),
+                      const Tab(text: 'Members'),
+                      const Tab(text: 'Schedule'),
+                      const Tab(text: 'Results'),
                     ],
                   ),
                 ),
@@ -189,11 +189,13 @@ class _ResultTabState extends State<ResultTab> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator(color: Colors.black));
+      return const Center(
+          child: CircularProgressIndicator(color: Colors.black));
     }
 
     if (matches.isEmpty) {
-      return Center(child: Text('No matches found for the selected team.'));
+      return const Center(
+          child: Text('No matches found for the selected team.'));
     }
 
     return ListView.builder(
@@ -283,11 +285,13 @@ class _ScheduleTabState extends State<ScheduleTab> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator(color: Colors.black));
+      return const Center(
+          child: CircularProgressIndicator(color: Colors.black));
     }
 
     if (matches.isEmpty) {
-      return Center(child: Text('No matches found for the selected team.'));
+      return const Center(
+          child: Text('No matches found for the selected team.'));
     }
 
     return ListView.builder(
@@ -361,7 +365,7 @@ class _MembersTabState extends State<MembersTab> {
                 // Table header
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       flex: 1,
                       child: SizedBox(), // Placeholder for avatar
                     ),
@@ -503,16 +507,16 @@ class _PlayerRowsState extends State<PlayerRows> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProfilePage(
-                    teamImage: '${widget.teamImage}',
-                    participantImage: '${widget.image}',
-                  )),
-        );
-      }),
+      // onTap: () => setState(() {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => ProfilePage(
+      //               teamImage: '${widget.teamImage}',
+      //               participantImage: '${widget.image}',
+      //             )),
+      //   );
+      // }),
       onLongPress: () {
         setState(() {
           showSportsName = !showSportsName;

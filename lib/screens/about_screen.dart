@@ -40,10 +40,10 @@ class _AboutScreenState extends State<AboutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: Image.asset('assets/images/aboutphoto.jpg'),
-              ),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(16.0),
+              //   child: Image.asset('assets/images/aboutphoto.jpg'),
+              // ),
               const SizedBox(height: 16),
               FutureBuilder<AboutAPI>(
                 future: _aboutDataFuture,
@@ -107,21 +107,21 @@ class _AboutScreenState extends State<AboutScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                  child: const Text('Delete Account',
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
-                ),
-              ),
+              // Center(
+              //   child: ElevatedButton(
+              //     onPressed: () {},
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.red,
+              //       padding: const EdgeInsets.symmetric(
+              //           horizontal: 32.0, vertical: 12.0),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(12.0),
+              //       ),
+              //     ),
+              //     child: const Text('Delete Account',
+              //         style: TextStyle(fontSize: 16, color: Colors.white)),
+              //   ),
+              // ),
             ],
           ),
         ),

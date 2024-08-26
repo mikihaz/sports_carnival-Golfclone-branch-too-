@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'dart:async';
 import 'package:rpgl/bases/api/refereeandmarshal.dart';
+import 'package:rpgl/bases/themes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RefereeAndMarshalScreen extends StatefulWidget {
   @override
@@ -125,18 +128,25 @@ class _RefereeAndMarshalScreenState extends State<RefereeAndMarshalScreen> {
                                 children: [
                                   IconButton(
                                     icon: Icon(Icons.call),
-                                    color: Colors.blueAccent,
+                                    color: AppThemes.getBackground(),
                                     onPressed: () {
                                       // Add call functionality here
+                                      _makePhoneCall('${referee.phone}');
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.mail_outline),
-                                    color: Colors.blueAccent,
                                     onPressed: () {
-                                      // Add mail functionality here
+                                      _sendWhatsApp('${referee.phone}',
+                                          'Hello $referee.name');
                                     },
-                                  ),
+                                    icon: SvgPicture.asset(
+                                      'assets/images/whatsapp.svg',
+                                      color: Colors.green,
+                                      semanticsLabel: 'WhatsApp Icon',
+                                      height: 24, // Set your desired height
+                                      width: 24, // Set your desired width
+                                    ),
+                                  )
                                 ],
                               ),
                             ],
@@ -152,5 +162,34 @@ class _RefereeAndMarshalScreenState extends State<RefereeAndMarshalScreen> {
         ),
       ),
     );
+  }
+}
+
+void _makePhoneCall(String phoneNumber) async {
+  final Uri launchUri = Uri(
+    scheme: 'tel',
+    path: phoneNumber,
+  );
+  await launchUrl(launchUri);
+}
+
+// void _sendEmail(String email) async {
+//   final Uri emailUri =
+//       Uri(scheme: 'mailto', path: email, queryParameters: {'subject': 'Hello'});
+//   await launchUrl(emailUri);
+// }
+
+void _sendWhatsApp(String phoneNumber, String message) async {
+  // Ensure phone number is in international format without any "+" or spaces
+  phoneNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
+
+  // WhatsApp URL with encoded message
+  String url =
+      "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
+
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch WhatsApp';
   }
 }
