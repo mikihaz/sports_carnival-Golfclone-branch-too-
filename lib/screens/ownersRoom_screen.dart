@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rpgl/bases/api/assignAdmin.dart';
+import 'package:rpgl/bases/api/ownerLogin.dart';
 import 'package:rpgl/bases/api/schedule.dart';
 import 'package:rpgl/bases/api/showMyTeam.dart';
 import 'package:rpgl/bases/themes.dart';
@@ -37,10 +39,16 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void _handleLogout() {
+    void _handleLogout() async {
       // Perform your logout logic here, such as clearing session data
+
+      // Call the function to delete all data from Hive
+      await OwnerLoginAPI.deleteAllData();
+
+      // Navigate to the HomeScreen after logout
       Navigator.of(context).pushReplacement(
-        _createPageRoute(HomeScreen()), // Redirect to login screen after logout
+        _createPageRoute(
+            HomeScreen()), // Redirect to the HomeScreen after logout
       );
     }
 
@@ -126,7 +134,7 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
                           );
                         },
                         child: AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                           width: 100,
                           height: 100,
@@ -141,7 +149,7 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
                                 color: Colors.black.withOpacity(0.2),
                                 spreadRadius: 4,
                                 blurRadius: 10,
-                                offset: Offset(0, 2),
+                                offset: const Offset(0, 2),
                               ),
                             ],
                           ),
@@ -158,11 +166,11 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
                         top: 130.0,
                         left: MediaQuery.of(context).size.width / 2 - 60,
                         child: AnimatedOpacity(
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           opacity: isCollapsed ? 1.0 : 0.0,
                           child: Text(
                             widget.ownerName, // Replace with the person's name
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -179,7 +187,7 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 80), // Space for profile image
+                const SizedBox(height: 80), // Space for profile image
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -187,13 +195,13 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
                     children: <Widget>[
                       Text(
                         widget.ownerName, // Replace with the person's name
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         widget.teamName, // Replace with the team name
                         style: TextStyle(
@@ -289,21 +297,21 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
       future: ShowMyTeamAPI.showmyteamlist(teamId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
               child: CircularProgressIndicator(
             color: Colors.black,
           ));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.memberData == null) {
-          return Center(child: Text('No members found'));
+          return const Center(child: Text('No members found'));
         }
 
         final members = snapshot.data!.memberData!;
 
         return ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: members.length,
           itemBuilder: (context, index) {
             final member = members[index];
@@ -311,44 +319,101 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
 
             return ListTile(
               contentPadding:
-                  EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               leading: CircleAvatar(
                 backgroundImage: member.participantImage != null
                     ? NetworkImage(member.participantImage!)
-                    : AssetImage('assets/player.png') as ImageProvider,
+                    : const AssetImage('assets/player.png') as ImageProvider,
               ),
               title: Text(
                 member.memberName ?? 'Unknown Player',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               subtitle: Text('Handicap: ${member.handicap ?? 'N/A'}'),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.mail),
+                    icon: const Icon(Icons.mail),
                     onPressed: () {
                       _launchEmail(member.displayParticipantMobile);
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.call),
+                    icon: const Icon(Icons.call),
                     onPressed: () {
                       _launchPhoneCall(member.displayParticipantMobile);
                     },
                   ),
-                  // Checkbox(
-                  //   value: isAdmin,
-                  //   onChanged: (bool? value) {
-                  //     if (value != null) {
-                  //       setState(() {
-                  //         isAdmin = value;
-                  //         member.adminStatus = value ? '1' : '0';
-                  //         // Implement any logic to update the status in the backend if needed
-                  //       });
-                  //     }
-                  //   },
-                  // ),
+                  IconButton(
+                    icon: const Icon(Icons.admin_panel_settings),
+                    onPressed: () async {
+                      // Show a loading indicator while the request is being processed
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
+
+                      // Call the assignadmin function
+                      try {
+                        AssignAdminAPI result =
+                            await AssignAdminAPI.assignadmin(
+                                member.memberId ?? '');
+
+                        // Dismiss the loading indicator
+                        Navigator.of(context).pop();
+
+                        // Show the result to the user in a dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(result.processStatus == 'YES'
+                                  ? 'Admin Assigned'
+                                  : 'Error'),
+                              content: Text(result.processMessage ??
+                                  'Something went wrong'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } catch (e) {
+                        // If an error occurs, dismiss the loading indicator and show an error message
+                        Navigator.of(context).pop();
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Error'),
+                              content: const Text(
+                                  'Failed to assign admin. Please try again.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             );
@@ -374,7 +439,7 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email is not available')),
+        const SnackBar(content: Text('Email is not available')),
       );
     }
   }
@@ -392,7 +457,7 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Phone number is not available')),
+        const SnackBar(content: Text('Phone number is not available')),
       );
     }
   }
@@ -402,12 +467,14 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
       future: ScheduleAPI.matchlist(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(color: Colors.black));
+          return const Center(
+              child: CircularProgressIndicator(color: Colors.black));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData ||
             snapshot.data!.scheduleAndResultsDetails == null) {
-          return Center(child: Text('No matches found for the selected team.'));
+          return const Center(
+              child: Text('No matches found for the selected team.'));
         }
 
         List<Group> allMatches = [];
@@ -421,7 +488,8 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
             .toList();
 
         if (matches.isEmpty) {
-          return Center(child: Text('No matches found for the selected team.'));
+          return const Center(
+              child: Text('No matches found for the selected team.'));
         }
 
         return SingleChildScrollView(
@@ -448,12 +516,14 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
       future: ScheduleAPI.matchlist(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(color: Colors.black));
+          return const Center(
+              child: CircularProgressIndicator(color: Colors.black));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData ||
             snapshot.data!.scheduleAndResultsDetails == null) {
-          return Center(child: Text('No matches found for the selected team.'));
+          return const Center(
+              child: Text('No matches found for the selected team.'));
         }
 
         List<Group> allMatches = [];
@@ -467,7 +537,8 @@ class _OwnersRoomScreenState extends State<OwnersRoomScreen> {
             .toList();
 
         if (matches.isEmpty) {
-          return Center(child: Text('No matches found for the selected team.'));
+          return const Center(
+              child: Text('No matches found for the selected team.'));
         }
 
         return SingleChildScrollView(
@@ -521,11 +592,11 @@ class FullScreenImage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
           color: Colors.white,
         ),
-        title: Text(
+        title: const Text(
           'Profile Image',
           style: TextStyle(color: Colors.white),
         ),

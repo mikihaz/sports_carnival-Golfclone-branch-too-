@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/ownerLogin.dart';
 import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/ownersRoom_screen.dart';
+import 'package:rpgl/screens/play_along_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  final bool isFromLogin;
+
+  const LoginScreen({super.key, required this.isFromLogin});
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _phoneNumberController = TextEditingController();
-  List<TextEditingController> _otpControllers =
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final List<TextEditingController> _otpControllers =
       List.generate(4, (_) => TextEditingController());
   bool _showOtpField = false;
   String? _serverOtp;
@@ -24,7 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     // Attempt to redirect to the OwnersRoomScreen if data is already saved locally
-    redirectToOwnersRoom();
+    // Retrieve the saved data from Hive and navigate
+    if (widget.isFromLogin == true) {
+      redirectToOwnersRoom();
+    } else {
+      redirectToPlayalongRoom();
+    }
+    // redirectToOwnersRoom();
   }
 
   Future<void> redirectToOwnersRoom() async {
@@ -48,6 +58,30 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> redirectToPlayalongRoom() async {
+    // Retrieve stored data from Hive
+    OwnerLoginAPI? storedData = await OwnerLoginAPI.readDataLocally();
+
+    if (storedData != null && storedData.participantData != null) {
+      ParticipantData participantData = storedData.participantData!;
+
+      // Navigate to OwnersRoomScreen with stored data
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => PlayAlongScreen(
+      //         // teamId: participantData.teamId ?? '',
+      //         // teamImage: participantData.teamImage ?? '',
+      //         // teamName: participantData.teamName ?? '',
+      //         // ownerName: participantData.memberName ?? '',
+      //         // ownerid: participantData.memberId ?? '',
+      //         // ownerimage: storedData.participantImage ?? '',
+      //         ),
+      //   ),
+      // );
     }
   }
 
@@ -86,7 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
       await OwnerLoginAPI.saveDataLocally(ownerLoginData);
 
       // Retrieve the saved data from Hive and navigate
-      redirectToOwnersRoom();
+      if (widget.isFromLogin == true) {
+        redirectToOwnersRoom();
+      } else {
+        redirectToPlayalongRoom();
+      }
+      // redirectToOwnersRoom();
     } else {
       // Show error if OTP does not match
       ScaffoldMessenger.of(context).showSnackBar(

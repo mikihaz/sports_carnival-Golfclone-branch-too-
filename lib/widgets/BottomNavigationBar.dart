@@ -78,7 +78,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
+                    builder: (context) => LoginScreen(
+                      isFromLogin: true,
+                    ),
                   ),
                 ),
               ),
@@ -87,28 +89,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             }).toList(),
           ),
         ),
-        // Center(
-        //   heightFactor: 0.5,
-        //   child: Column(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       FloatingActionButton(
-        //         onPressed: () {},
-        //         backgroundColor: Colors.white,
-        //         child: Icon(
-        //           Icons.sports_golf_rounded,
-        //           color: AppThemes.getBackground(),
-        //         ),
-        //         elevation: 8.0,
-        //       ),
-        //       const SizedBox(height: 2),
-        //       const Text(
-        //         "Scoreboard",
-        //         style: TextStyle(color: Colors.white, fontSize: 12),
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }

@@ -95,6 +95,11 @@ class OwnerLoginAPI {
     // Ensure that the data is deserialized correctly
     return OwnerLoginAPI.fromJson(Map<String, dynamic>.from(ownerLoginAPI));
   }
+
+  static Future<void> deleteAllData() async {
+    final box = await Hive.openBox('ownerLoginAPI');
+    await box.clear(); // This will delete all data from the box
+  }
 }
 
 class ParticipantData {

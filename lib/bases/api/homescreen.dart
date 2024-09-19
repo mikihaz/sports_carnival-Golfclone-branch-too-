@@ -150,7 +150,7 @@ class ShowCurrentMatchDetails {
     data['team2_image'] = team2Image;
     data['team2_image_url'] = team2ImageUrl;
     data['team2'] = team2;
-    data['results'] = results;
+    // data['results'] = results;
     data['score_board'] = scoreBoard;
     data['winner_name'] = winnerName;
     data['text1'] = text1;

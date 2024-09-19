@@ -15,7 +15,7 @@ class LeaderboardScreen extends StatefulWidget {
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
   String selectedGroup = "";
   final ScrollController _scrollController = ScrollController();
-  late Timer _timer;
+  // late Timer _timer;
   Map<String, LeaderboardDataSource> _dataSources = {};
   bool _isLoading = true;
   final bool _isSponsorVisible = true;
@@ -23,36 +23,36 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   void initState() {
     super.initState();
-    _startAutoScroll();
+    // _startAutoScroll();
     _fetchLeaderboardData();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    // _timer.cancel();
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _startAutoScroll() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (_scrollController.hasClients) {
-        double maxScrollExtent = _scrollController.position.maxScrollExtent;
-        double currentScrollPosition = _scrollController.position.pixels;
-        double nextScrollPosition = currentScrollPosition + 100;
+  // void _startAutoScroll() {
+  //   _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+  //     if (_scrollController.hasClients) {
+  //       double maxScrollExtent = _scrollController.position.maxScrollExtent;
+  //       double currentScrollPosition = _scrollController.position.pixels;
+  //       double nextScrollPosition = currentScrollPosition + 100;
 
-        if (nextScrollPosition >= maxScrollExtent) {
-          nextScrollPosition = 0;
-        }
+  //       if (nextScrollPosition >= maxScrollExtent) {
+  //         nextScrollPosition = 0;
+  //       }
 
-        _scrollController.animateTo(
-          nextScrollPosition,
-          duration: const Duration(seconds: 1),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
+  //       _scrollController.animateTo(
+  //         nextScrollPosition,
+  //         duration: const Duration(seconds: 1),
+  //         curve: Curves.easeInOut,
+  //       );
+  //     }
+  //   });
+  // }
 
   Future<void> _fetchLeaderboardData() async {
     try {
@@ -102,7 +102,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       //   backgroundColor: AppThemes.getBackground(),
       // ),
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Leaderboard',
           style: TextStyle(
             color: Colors.black,
@@ -112,10 +112,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(
               color: Colors.black,
             ))
@@ -264,24 +264,40 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                     verticalScrollController: _scrollController,
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: AnimatedOpacity(
-                    // opacity: 1.0,
-                    opacity: _isSponsorVisible ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 300),
-                    child: Container(
-                      height: 200,
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: Image.network(
-                        widget.sponsorImageUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                // Positioned(
+                //   bottom: 0,
+                //   left: 0,
+                //   right: 0,
+                //   child: Container(
+                //     height: 200,
+                //     width: double.infinity,
+                //     color: widget.sponsorImageUrl != null &&
+                //             widget.sponsorImageUrl.isNotEmpty
+                //         ? Colors.grey
+                //         : Colors.grey[300],
+                //     child: widget.sponsorImageUrl != null &&
+                //             widget.sponsorImageUrl.isNotEmpty
+                //         ? Image.network(
+                //             widget.sponsorImageUrl,
+                //             fit: BoxFit.cover,
+                //           )
+                //         : null,
+                //   ),
+                // ),
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  color: widget.sponsorImageUrl != null &&
+                          widget.sponsorImageUrl.isNotEmpty
+                      ? Colors.grey
+                      : Colors.grey[300],
+                  child: widget.sponsorImageUrl != null &&
+                          widget.sponsorImageUrl.isNotEmpty
+                      ? Image.network(
+                          widget.sponsorImageUrl,
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
               ],
             ),
@@ -328,13 +344,13 @@ class LeaderboardDataSource extends DataGridSource {
 
         return Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(teamImage),
-                radius: 12,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: CircleAvatar(
+            //     backgroundImage: NetworkImage(teamImage),
+            //     radius: 12,
+            //   ),
+            // ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

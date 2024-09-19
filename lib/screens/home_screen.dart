@@ -62,16 +62,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: bannerImageUrl != null
                     ? Image.network(
                         bannerImageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.asset(
-                          'assets/images/topbanner.jpg',
-                          fit: BoxFit.cover,
+                        fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: Colors.grey,
                         ),
                       )
-                    : Image.asset(
-                        'assets/images/topbanner.jpg',
-                        fit: BoxFit.cover,
+                    : Container(
+                        color: Colors.grey,
                       ),
               ),
               Container(
@@ -99,13 +96,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       color: Colors.white,
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.power_settings_new),
-                      onPressed: () {
-                        // Handle power button press
-                      },
-                      color: Colors.white,
-                    ),
+                    // IconButton(
+                    //   icon: const Icon(Icons.power_settings_new),
+                    //   onPressed: () {
+                    //     // Handle power button press
+                    //   },
+                    //   color: Colors.white,
+                    // ),
                   ],
                 ),
               ),
@@ -140,12 +137,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(
                           8.0), // Adjust the radius as needed
-                      child: Image.network(
-                        homescreensponsor ?? '',
-                        height: 70,
-                        width: 130,
-                        fit: BoxFit.fill,
-                      ),
+                      child: homescreensponsor != null &&
+                              homescreensponsor!.isNotEmpty
+                          ? Image.network(
+                              homescreensponsor!,
+                              height: 70,
+                              width: 130,
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                height: 70,
+                                width: 130,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : Container(
+                              height: 70,
+                              width: 130,
+                              color: Colors.grey,
+                            ),
                     ),
                   ),
                 ),
@@ -193,12 +203,26 @@ class _HomeScreenState extends State<HomeScreen> {
                               bottomLeft: Radius.circular(15),
                               bottomRight: Radius.circular(15),
                             ),
-                            child: Image.network(
-                              leaderboardsponsor ?? '',
-                              height: 40,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
+                            child: leaderboardsponsor != null &&
+                                    leaderboardsponsor!.isNotEmpty
+                                ? Image.network(
+                                    leaderboardsponsor!,
+                                    height: 40,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                      height: 40,
+                                      width: double.infinity,
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 40,
+                                    width: double.infinity,
+                                    color: Colors.grey,
+                                  ),
                           ),
                         ),
                       ),
