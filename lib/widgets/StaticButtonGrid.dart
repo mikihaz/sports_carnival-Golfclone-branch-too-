@@ -40,6 +40,7 @@ class _StaticButtonGridState extends State<StaticButtonGrid> {
       });
     } else {
       initializeButtons(); // Initialize buttons if member_id is null
+      setState(() {});
     }
   }
 

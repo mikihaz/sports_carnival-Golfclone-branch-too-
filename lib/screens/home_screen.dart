@@ -238,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            const StaticButtonGrid(),
+            StaticButtonGrid(),
             ScoreCarousel(
               scoreImages: scoreImages,
               scoreLinks: scoreLinks,
