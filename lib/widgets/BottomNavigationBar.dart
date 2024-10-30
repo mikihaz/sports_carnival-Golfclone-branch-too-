@@ -74,7 +74,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               buildNavItem(
                 context,
                 Icons.person,
-                "Owner's Room",
+                "Captain's Room",
                 () => Navigator.push(
                   context,
                   MaterialPageRoute(

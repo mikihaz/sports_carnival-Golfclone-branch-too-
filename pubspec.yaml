@@ -35,7 +35,7 @@ dependencies:
   http: ^1.2.1
   hive: ^2.0.4
   hive_flutter: 1.1.0
-
+  rename: ^3.0.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
@@ -45,6 +45,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   video_player: ^2.9.1
   dio: ^5.6.0
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,32 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: "^0.14.0"
+
+flutter_launcher_icons:
+  android: "adaptive"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/csc.png"
+  adaptive_icon_background: "#FFFFFF"  # Solid white background for Android
+  adaptive_icon_foreground: "assets/images/csc.png"  # Your actual icon
+  
+  min_sdk_android: 21  # Minimum Android SDK version
+  
+  web:
+    generate: true
+    image_path: "assets/images/csc.png"
+    background_color: "#FFFFFF"  # Solid white background for the web
+    theme_color: "#FFFFFF"  # Solid white theme color for the web
+
+  windows:
+    generate: true
+    image_path: "assets/images/csc.png"
+    icon_size: 48  # min:48, max:256, default: 48
+
+  macos:
+    generate: true
+    image_path: "assets/images/csc.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

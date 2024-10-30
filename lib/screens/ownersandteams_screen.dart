@@ -78,7 +78,7 @@ class _OwnersAndTeamsScreenState extends State<OwnersAndTeamsScreen> {
                 ],
               ),
               title: const Text(
-                'Owners & Teams',
+                'Captains & Teams',
                 style: TextStyle(color: Colors.white),
               ),
               titlePadding: const EdgeInsets.all(16),

@@ -157,6 +157,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             teamB: match['teamB']!,
                             date: match['date']!,
                             time: match['time']!,
+                            sportsName: match['sportsName']!,
                             showResult: true,
                             result:
                                 match['result'], // Pass the result to MatchCard

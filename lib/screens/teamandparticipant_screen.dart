@@ -211,6 +211,7 @@ class _ResultTabState extends State<ResultTab> {
           teamB: match.team2!,
           date: match.date!,
           time: match.time!,
+          sportsName: match.sportsName!,
           showResult: true,
           result:
               match.results ?? 'No result available', // Provide a default value
@@ -307,6 +308,7 @@ class _ScheduleTabState extends State<ScheduleTab> {
           teamB: match.team2!,
           date: match.date!,
           time: match.time!,
+          sportsName: match.sportsName!,
         );
       },
     );

@@ -43,6 +43,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               'logoB': group.team2ImageUrl ?? '',
               'date': group.date ?? '',
               'time': group.time ?? '',
+              'sports_name': group.sportsName ?? '',
             };
           }).toList();
           fetchedMatches.add(groupMatches);
@@ -66,7 +67,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Schedule',
           style: TextStyle(
             color: Colors.black,
@@ -76,94 +77,98 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                color: Colors.black, // Black loader color
-              ),
-            )
-          : Column(
-              children: [
-                Container(
-                  height: 50,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: options.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = index;
-                            _pageController.animateToPage(index,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut);
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          width: MediaQuery.of(context).size.width /
-                              options.length,
-                          decoration: BoxDecoration(
-                            border: _selectedIndex == index
-                                ? Border(
-                                    bottom: BorderSide(
-                                      color: AppThemes.getBackground(),
-                                      width: 2.0,
-                                    ),
-                                  )
-                                : null,
-                          ),
-                          child: Center(
-                            child: Text(
-                              options[index],
-                              style: TextStyle(
-                                color: _selectedIndex == index
-                                    ? AppThemes.getBackground()
-                                    : Colors.black,
-                                fontWeight: _selectedIndex == index
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+      body: Container(
+        color: Colors.white,
+        child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black, // Black loader color
+                ),
+              )
+            : Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: options.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = index;
+                              _pageController.animateToPage(index,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            width: MediaQuery.of(context).size.width /
+                                options.length,
+                            decoration: BoxDecoration(
+                              border: _selectedIndex == index
+                                  ? Border(
+                                      bottom: BorderSide(
+                                        color: AppThemes.getBackground(),
+                                        width: 2.0,
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            child: Center(
+                              child: Text(
+                                options[index],
+                                style: TextStyle(
+                                  color: _selectedIndex == index
+                                      ? AppThemes.getBackground()
+                                      : Colors.black,
+                                  fontWeight: _selectedIndex == index
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    },
-                    itemCount: matches.length,
-                    itemBuilder: (context, index) {
-                      return ListView.builder(
-                        itemCount: matches[index].length,
-                        itemBuilder: (context, matchIndex) {
-                          final match = matches[index][matchIndex];
-                          return MatchCard(
-                            matchNo: match['matchNo']!,
-                            logoA: match['logoA']!,
-                            teamA: match['teamA']!,
-                            logoB: match['logoB']!,
-                            teamB: match['teamB']!,
-                            date: match['date']!,
-                            time: match['time']!,
-                          );
-                        },
-                      );
-                    },
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                      itemCount: matches.length,
+                      itemBuilder: (context, index) {
+                        return ListView.builder(
+                          itemCount: matches[index].length,
+                          itemBuilder: (context, matchIndex) {
+                            final match = matches[index][matchIndex];
+                            return MatchCard(
+                              matchNo: match['matchNo']!,
+                              logoA: match['logoA']!,
+                              teamA: match['teamA']!,
+                              logoB: match['logoB']!,
+                              teamB: match['teamB']!,
+                              date: match['date']!,
+                              time: match['time']!,
+                              sportsName: match['sports_name']!,
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+      ),
     );
   }
 }

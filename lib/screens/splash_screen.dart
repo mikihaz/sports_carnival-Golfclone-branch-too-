@@ -16,18 +16,18 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     _controller = AnimationController(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       vsync: this,
     );
 
     _scaleAnimation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.bounceOut,
+      curve: Curves.easeOutExpo,
     );
 
     _controller.forward();
 
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -44,34 +44,33 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background image with dark overlay
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/bg_splash.jpg'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.5),
-                  BlendMode.darken,
-                ),
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/b1.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // White overlay
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.8),
+            ),
+          ),
+          // Logo with animation
+          Center(
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: Image.asset(
+                'assets/images/csc.png',
+                width: 150,
+                height: 150,
               ),
             ),
           ),
-          // Logo animation
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.25,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Image.asset('assets/images/rpgllogo.png'),
-              ),
-            ),
-          ),
-          // Text
         ],
       ),
     );

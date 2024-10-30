@@ -4,7 +4,9 @@ import 'package:rpgl/bases/api/homescreen.dart'; // Import the API file
 import 'package:rpgl/bases/themes.dart';
 import 'package:rpgl/screens/notification_screen.dart';
 import 'package:rpgl/widgets/BottomNavigationBar.dart';
+import 'package:rpgl/widgets/ScoreCarousel.dart';
 import 'package:rpgl/widgets/StaticButtonGrid.dart';
+import 'package:rpgl/widgets/StreamCarousel.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,234 +14,244 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? bannerImageUrl;
   String? leagueName; // Variable to store data from the API
-  String? homescreensponsor; // Variable to store data from the API
-  String? leaderboardsponsor; // Variable to store data from the API
+  String? score;
+  String? homeScreenSideImage;
+  List<String> bannerImages = [];
+  List<String> bannerLinks = [];
+  List<String> streamImages = [];
+  List<String> streamLinks = [];
+  List<String> scoreImages = [];
+  List<String> scoreLinks = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchBannerImage();
     _fetchHomeScreenData(); // Fetch data from the homescreenlist API
   }
 
-  Future<void> _fetchBannerImage() async {
-    try {
-      BannerImageAPI response = await BannerImageAPI.leaderboardlist();
-      setState(() {
-        bannerImageUrl = response.bannerImage;
-      });
-    } catch (e) {
-      print("Error fetching banner image: $e");
-    }
-  }
-
   Future<void> _fetchHomeScreenData() async {
-    // try {
     HomescreenAPI response = await HomescreenAPI.homescreenlist();
+    homeScreenSideImage = response.homeScreenSideImage ?? '';
+    leagueName = response.usernameExistStatus ?? '';
+    print("Home Screen Side Image URL: $homeScreenSideImage"); // Debug print
+    // Temporary lists to avoid duplicate data
+    List<String> newBannerImages = [];
+    List<String> newBannerLinks = [];
+    List<String> newScoreImages = [];
+    List<String> newScoreLinks = [];
+    List<String> newStreamImages = [];
+    List<String> newStreamLinks = [];
+
+    if (response.leaderboardTypeData?.bANNER != null) {
+      response.leaderboardTypeData!.bANNER!.forEach((banner) {
+        if (banner.bannerImage != null) {
+          newBannerImages.add(banner.bannerImage!);
+          print("Score Image URL: ${banner.bannerImage}"); // Debug print
+        }
+        if (banner.link != null) {
+          newBannerLinks.add(banner.link!);
+          print("Score Link URL: ${banner.link}"); // Debug print
+        }
+      });
+    }
+    // Process SCORE data if available
+    if (response.leaderboardTypeData?.sCORE != null) {
+      response.leaderboardTypeData!.sCORE!.forEach((score) {
+        if (score.bannerImage != null) {
+          newScoreImages.add(score.bannerImage!);
+          print("Score Image URL: ${score.bannerImage}"); // Debug print
+        }
+        if (score.link != null) {
+          newScoreLinks.add(score.link!);
+          print("Score Link URL: ${score.link}"); // Debug print
+        }
+      });
+    }
+    // Process STREAM data if available
+    if (response.leaderboardTypeData?.sTREAM != null) {
+      response.leaderboardTypeData!.sTREAM!.forEach((stream) {
+        if (stream.bannerImage != null) {
+          newStreamImages.add(stream.bannerImage!);
+          print("Score Image URL: ${stream.bannerImage}"); // Debug print
+        }
+        if (stream.link != null) {
+          newStreamLinks.add(stream.link!);
+          print("Score Link URL: ${stream.link}"); // Debug print
+        }
+      });
+    }
+
+    // Update state only once data is ready
     setState(() {
-      leagueName = response.usernameExistStatus;
-      homescreensponsor = response.homeScreenSideImage;
-      leaderboardsponsor = response.leaderboardImage;
+      scoreImages = newScoreImages;
+      scoreLinks = newScoreLinks;
+      streamImages = newStreamImages;
+      streamLinks = newStreamLinks;
+      bannerImages = newBannerImages;
+      bannerLinks = newBannerLinks;
+      print("Updated scoreImages in state: $scoreImages"); // Debug print
     });
-    // } catch (e) {
-    //   print("Error fetching home screen data: $e");
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(200.0),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          flexibleSpace: Stack(
-            children: [
-              Positioned.fill(
-                child: bannerImageUrl != null
-                    ? Image.network(
-                        bannerImageUrl!,
-                        fit: BoxFit.fill,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey,
-                        ),
-                      )
-                    : Container(
-                        color: Colors.grey,
-                      ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 50,
-                right: 10,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.notifications),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotificationScreen()),
-                        );
-                      },
-                      color: Colors.white,
-                    ),
-                    // IconButton(
-                    //   icon: const Icon(Icons.power_settings_new),
-                    //   onPressed: () {
-                    //     // Handle power button press
-                    //   },
-                    //   color: Colors.white,
-                    // ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Stack(
+              clipBehavior:
+                  Clip.none, // Allow overflowing content to be visible
               children: [
-                Column(
-                  children: [
-                    Container(
-                      height: 40,
-                      color: AppThemes.getBackground(),
-                    ),
-                    Container(
-                      height: 35,
-                    ),
-                  ],
+                // Clipping the banner image with bottom-rounded corners
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                  child: bannerImages.isNotEmpty
+                      ? Image.network(
+                          bannerImages[0] ?? '',
+                          height: 200, // Set the desired height for the image
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            height: 200,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : Container(
+                          height: 200,
+                          color: Colors.grey,
+                        ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 8.0),
+                // Adding gradient overlay
+                Container(
+                  height: 200, // Match the height of the image
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withOpacity(0.6),
+                        Colors.transparent,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+                // Notification icon positioned at the top-right
+                Positioned(
+                  top: 50,
+                  right: 10,
+                  child: IconButton(
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationScreen(),
+                        ),
+                      );
+                    },
+                    color: Colors.white,
+                  ),
+                ),
+                // Side image positioned at the bottom-left with rounded borders and shadow, half inside and half outside the Stack
+                Positioned(
+                  bottom:
+                      -35, // Adjust to place half the image outside the Stack
+                  left: 20,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          8.0), // Adjust the radius as needed
-                      child: homescreensponsor != null &&
-                              homescreensponsor!.isNotEmpty
+                      borderRadius: BorderRadius.circular(12),
+                      child: homeScreenSideImage != null
                           ? Image.network(
-                              homescreensponsor!,
+                              homeScreenSideImage ?? '',
                               height: 70,
                               width: 130,
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   Container(
                                 height: 70,
                                 width: 130,
-                                color: Colors.grey,
+                                color: Colors.grey[300],
                               ),
                             )
                           : Container(
                               height: 70,
                               width: 130,
-                              color: Colors.grey,
+                              color: Colors.grey[300],
                             ),
                     ),
                   ),
                 ),
               ],
             ),
-            Container(
-              height: 40,
-              color: AppThemes.getBackground(),
-              child: Center(
+
+            // League name container with centered text and styling
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16, top: 64),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFFF4E50),
+                      Color(0xFF8B0000)
+                    ], // red to dark red
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      offset: const Offset(0, 4),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                alignment: Alignment.center,
                 child: Text(
-                  leagueName ?? '', // Use leagueName variable here
-                  style: TextStyle(
+                  leagueName ?? '',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
                   ),
                 ),
               ),
             ),
-            StaticButtonGrid(),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-              child: Container(
-                height: 130,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 80.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
-                            ),
-                            child: leaderboardsponsor != null &&
-                                    leaderboardsponsor!.isNotEmpty
-                                ? Image.network(
-                                    leaderboardsponsor!,
-                                    height: 40,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Container(
-                                      height: 40,
-                                      width: double.infinity,
-                                      color: Colors.grey,
-                                    ),
-                                  )
-                                : Container(
-                                    height: 40,
-                                    width: double.infinity,
-                                    color: Colors.grey,
-                                  ),
-                          ),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: Text('No Ongoing Matches'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
+            const StaticButtonGrid(),
+            ScoreCarousel(
+              scoreImages: scoreImages,
+              scoreLinks: scoreLinks,
+            ),
+            StreamCarousel(
+              streamImages: streamImages,
+              streamLinks: streamLinks,
             ),
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        sponsorImageUrl: leaderboardsponsor ?? '',
+      bottomNavigationBar: const CustomBottomNavigationBar(
+        sponsorImageUrl: '' ?? '',
       ),
     );
   }

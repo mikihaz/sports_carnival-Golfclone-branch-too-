@@ -4,45 +4,54 @@ import 'package:rpgl/bases/webservice.dart';
 
 class HomescreenAPI {
   String? processStatus;
-  String? leaderboardImage;
-  String? leaderboardWeblink;
   String? usernameExistStatus;
   String? enableClick;
   String? liveScoreStatus;
   List<ShowCurrentMatchDetails>? showCurrentMatchDetails;
   String? homeScreenSideImage;
+  List<String>? leaderboardType;
+  LeaderboardTypeData? leaderboardTypeData;
 
   HomescreenAPI(
       {this.processStatus,
-      this.leaderboardImage,
-      this.leaderboardWeblink,
       this.usernameExistStatus,
       this.enableClick,
       this.liveScoreStatus,
       this.showCurrentMatchDetails,
-      this.homeScreenSideImage});
+      this.homeScreenSideImage,
+      this.leaderboardTypeData});
 
   HomescreenAPI.fromJson(Map<String, dynamic> json) {
     processStatus = json['process_status'];
-    leaderboardImage = json['leaderboard_image'];
-    leaderboardWeblink = json['leaderboard_weblink'];
     usernameExistStatus = json['username_exist_status'];
     enableClick = json['enable_click'];
     liveScoreStatus = json['live_score_status'];
+
+    // Parse show_current_match_details
     if (json['show_current_match_details'] != null) {
       showCurrentMatchDetails = <ShowCurrentMatchDetails>[];
       json['show_current_match_details'].forEach((v) {
         showCurrentMatchDetails!.add(ShowCurrentMatchDetails.fromJson(v));
       });
     }
+
+    // Parse home_screen_side_image
     homeScreenSideImage = json['home_screen_side_image'];
+
+    // Parse leaderboard_type (if needed)
+    leaderboardType = json['leaderboard_type'] != null
+        ? List<String>.from(json['leaderboard_type'])
+        : null;
+
+    // Parse leaderboard_type_data
+    leaderboardTypeData = json['leaderboard_type_data'] != null
+        ? LeaderboardTypeData.fromJson(json['leaderboard_type_data'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['process_status'] = processStatus;
-    data['leaderboard_image'] = leaderboardImage;
-    data['leaderboard_weblink'] = leaderboardWeblink;
     data['username_exist_status'] = usernameExistStatus;
     data['enable_click'] = enableClick;
     data['live_score_status'] = liveScoreStatus;
@@ -51,6 +60,15 @@ class HomescreenAPI {
           showCurrentMatchDetails!.map((v) => v.toJson()).toList();
     }
     data['home_screen_side_image'] = homeScreenSideImage;
+
+    // Add leaderboard_type and leaderboard_type_data to the JSON map
+    if (leaderboardType != null) {
+      data['leaderboard_type'] = leaderboardType;
+    }
+    if (leaderboardTypeData != null) {
+      data['leaderboard_type_data'] = leaderboardTypeData!.toJson();
+    }
+
     return data;
   }
 
@@ -65,6 +83,106 @@ class HomescreenAPI {
     String responseString = await response.stream.bytesToString();
     print(responseString);
     return HomescreenAPI.fromJson(jsonDecode(responseString));
+  }
+}
+
+class LeaderboardTypeData {
+  List<BANNER>? bANNER;
+  List<SCORE>? sCORE;
+  List<STREAM>? sTREAM;
+
+  LeaderboardTypeData({this.bANNER, this.sCORE, this.sTREAM});
+
+  LeaderboardTypeData.fromJson(Map<String, dynamic> json) {
+    if (json['BANNER'] != null) {
+      bANNER = <BANNER>[];
+      json['BANNER'].forEach((v) {
+        bANNER!.add(BANNER.fromJson(v));
+      });
+    }
+    if (json['SCORE'] != null) {
+      sCORE = <SCORE>[];
+      json['SCORE'].forEach((v) {
+        sCORE!.add(SCORE.fromJson(v));
+      });
+    }
+    if (json['STREAM'] != null) {
+      sTREAM = <STREAM>[];
+      json['STREAM'].forEach((v) {
+        sTREAM!.add(STREAM.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (bANNER != null) {
+      data['BANNER'] = bANNER!.map((v) => v.toJson()).toList();
+    }
+    if (sCORE != null) {
+      data['SCORE'] = sCORE!.map((v) => v.toJson()).toList();
+    }
+    if (sTREAM != null) {
+      data['STREAM'] = sTREAM!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class BANNER {
+  String? bannerImage;
+  String? link;
+
+  BANNER({this.bannerImage, this.link});
+
+  BANNER.fromJson(Map<String, dynamic> json) {
+    bannerImage = json['banner_image'];
+    link = json['link'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['banner_image'] = bannerImage;
+    data['link'] = link;
+    return data;
+  }
+}
+
+class SCORE {
+  String? bannerImage;
+  String? link;
+
+  SCORE({this.bannerImage, this.link});
+
+  SCORE.fromJson(Map<String, dynamic> json) {
+    bannerImage = json['banner_image'];
+    link = json['link'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['banner_image'] = bannerImage;
+    data['link'] = link;
+    return data;
+  }
+}
+
+class STREAM {
+  String? bannerImage;
+  String? link;
+
+  STREAM({this.bannerImage, this.link});
+
+  STREAM.fromJson(Map<String, dynamic> json) {
+    bannerImage = json['banner_image'];
+    link = json['link'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['banner_image'] = bannerImage;
+    data['link'] = link;
+    return data;
   }
 }
 

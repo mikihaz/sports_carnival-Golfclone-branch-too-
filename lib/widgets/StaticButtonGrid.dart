@@ -87,7 +87,7 @@ class _StaticButtonGridState extends State<StaticButtonGrid> {
       ),
       ButtonConfig(
         imagePath: 'assets/images/owners_team.png',
-        text: 'Owners & Teams',
+        text: 'Captains & Teams',
         onTap: () {
           Navigator.push(
             context,
@@ -161,6 +161,7 @@ class _StaticButtonGridState extends State<StaticButtonGrid> {
         itemBuilder: (context, index) {
           final button = buttons[index];
           return Card(
+            color: Colors.white,
             elevation: 6,
             margin: const EdgeInsets.all(8),
             shape: RoundedRectangleBorder(

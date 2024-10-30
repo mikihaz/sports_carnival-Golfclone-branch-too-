@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rpgl/bases/api/ownerLogin.dart';
 import 'package:rpgl/bases/themes.dart';
+import 'package:rpgl/screens/captainsRoom_screen.dart';
 import 'package:rpgl/screens/ownersRoom_screen.dart';
 import 'package:rpgl/screens/play_along_screen.dart';
 
@@ -44,11 +45,25 @@ class _LoginScreenState extends State<LoginScreen> {
     if (storedData != null && storedData.participantData != null) {
       ParticipantData participantData = storedData.participantData!;
 
+      // // Navigate to OwnersRoomScreen with stored data
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => OwnersRoomScreen(
+      //       teamId: participantData.teamId ?? '',
+      //       teamImage: participantData.teamImage ?? '',
+      //       teamName: participantData.teamName ?? '',
+      //       ownerName: participantData.memberName ?? '',
+      //       ownerid: participantData.memberId ?? '',
+      //       ownerimage: storedData.participantImage ?? '',
+      //     ),
+      //   ),
+      // );
       // Navigate to OwnersRoomScreen with stored data
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OwnersRoomScreen(
+          builder: (context) => CaptainsRoomScreen(
             teamId: participantData.teamId ?? '',
             teamImage: participantData.teamImage ?? '',
             teamName: participantData.teamName ?? '',

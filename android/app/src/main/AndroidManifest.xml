@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Golf App"
+        android:label="CSC Sports Carnival"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/adaptive">
         <activity
             android:name=".MainActivity"
             android:exported="true"

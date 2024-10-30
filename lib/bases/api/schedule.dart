@@ -98,6 +98,7 @@ class Group {
   String? id;
   String? date;
   String? time;
+  String? sportsName;
   String? groupName;
   String? teams;
   String? team1Id;
@@ -134,6 +135,7 @@ class Group {
       this.text2,
       this.buttonStatus,
       this.imageName,
+      this.sportsName,
       this.resultData});
 
   Group.fromJson(Map<String, dynamic> json) {
@@ -155,6 +157,7 @@ class Group {
     text2 = json['text2'];
     buttonStatus = json['button_status'];
     imageName = json['image_name'];
+    sportsName = json['sports_name'];
     resultData = json['result_data'] != null
         ? ResultData.fromJson(json['result_data'])
         : null;
@@ -180,6 +183,7 @@ class Group {
     data['text2'] = text2;
     data['button_status'] = buttonStatus;
     data['image_name'] = imageName;
+    data['sports_name'] = sportsName;
     if (resultData != null) {
       data['result_data'] = resultData!.toJson();
     }
